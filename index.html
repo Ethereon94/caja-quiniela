@@ -1,137 +1,170 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Caja Quiniela & Lotipago</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<title>Caja Quiniela & Lotipago</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#222222">
 </head>
 
 <body>
 
 <header>
-  <h1>💰 Caja diaria</h1>
+<h1>💰 Caja diaria</h1>
 </header>
 
-<!-- 🟢 PANTALLA PRINCIPAL -->
 <section id="pantallaPrincipal">
 
-  <section class="selector">
-    <button id="btnQuiniela" class="active">🎰 Quiniela</button>
-    <button id="btnLotipago">🧾 Lotipago</button>
-  </section>
+<section class="selector">
+<button id="btnQuiniela" class="active">🎰 Quiniela</button>
+<button id="btnLotipago">🧾 Lotipago</button>
+</section>
 
-  <section class="formulario">
-    <label>Método de pago</label>
-    <select id="metodo">
-      <option value="efectivo">Efectivo</option>
-      <option value="transferencia">Transferencia</option>
-      <option value="fiado">Fiado</option>
-    </select>
+<section class="formulario">
 
-    <label>Tipo de cliente</label>
-    <select id="cliente">
-      <option value="regular">Cliente</option>
-      <option value="propio">Propio</option>
-    </select>
+<label>Método de pago</label>
+<select id="metodo">
+<option value="efectivo">Efectivo</option>
+<option value="transferencia">Transferencia</option>
+<option value="fiado">Fiado</option>
+</select>
 
-    <label>Monto</label>
-    <input type="number" id="monto" placeholder="0">
+<label>Tipo de cliente</label>
+<select id="cliente">
+<option value="regular">Cliente</option>
+<option value="propio">Propio</option>
+</select>
 
-    <button onclick="guardar()">Guardar ingreso</button>
-  </section>
+<label>Monto</label>
+<input type="number" id="monto" placeholder="0">
 
-  <section class="resumen">
-    <h2>📊 Resumen del día</h2>
-    <div id="resumenContenido"></div>
+<button onclick="guardar()">Guardar ingreso</button>
 
-    <button class="btnSecundario" onclick="abrirHistorial()">
-      📅 Ver resumen semanal
-    </button>
-  </section>
-
-  <section class="filtros">
-    <select id="filtroEstado" onchange="render()">
-      <option value="todos">Todas las transacciones</option>
-      <option value="pagado">Pagados</option>
-      <option value="fiado">Fiados</option>
-      <option value="propio">Propios</option>
-    </select>
-
-    <select id="filtroTipo" onchange="render()">
-      <option value="todos">Todos los tipos</option>
-      <option value="quiniela">Solo Quiniela</option>
-      <option value="lotipago">Solo Lotipago</option>
-    </select>
-  </section>
-
-  <section class="dias">
-    <div id="diasSemana"></div>
-  </section>
-
-  <section class="tabla">
-    <table>
-      <thead>
-        <tr>
-          <th>Fecha</th>
-          <th>Tipo</th>
-          <th>Método</th>
-          <th>Cliente</th>
-          <th>Recaudación</th>
-          <th>Comisión</th>
-          <th>Arancel</th>
-          <th>Ganancia</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="tablaDatos"></tbody>
-    </table>
-  </section>
-
-  <section class="cierre">
-    <button onclick="exportarCierreCaja()">🧾 Exportar cierre del día</button>
-  </section>
+<button onclick="registrarPremio()" class="btnPremio">
+🏆 Registrar premio
+</button>
 
 </section>
 
-<!-- 🟡 PANTALLA HISTORIAL -->
+<section class="resumen">
+
+<h2>📊 Resumen del día</h2>
+
+<div id="resumenContenido"></div>
+
+<button class="btnSecundario" onclick="abrirPantallaPremios()">
+🏆 Ver premios pendientes
+</button>
+
+<button class="btnSecundario" onclick="abrirHistorial()">
+📅 Ver resumen semanal
+</button>
+
+</section>
+
+<section class="filtros">
+
+<select id="filtroEstado" onchange="render()">
+<option value="todos">Todas las transacciones</option>
+<option value="pagado">Pagados</option>
+<option value="fiado">Fiados</option>
+<option value="propio">Propios</option>
+</select>
+
+<select id="filtroTipo" onchange="render()">
+<option value="todos">Todos los tipos</option>
+<option value="quiniela">Solo Quiniela</option>
+<option value="lotipago">Solo Lotipago</option>
+</select>
+
+</section>
+
+<section class="dias">
+<div id="diasSemana"></div>
+</section>
+
+<section class="tabla">
+
+<table>
+
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Tipo</th>
+<th>Método</th>
+<th>Cliente</th>
+<th>Recaudación</th>
+<th>Comisión</th>
+<th>Arancel</th>
+<th>Ganancia</th>
+<th>Acciones</th>
+</tr>
+</thead>
+
+<tbody id="tablaDatos"></tbody>
+
+</table>
+
+</section>
+
+<section class="cierre">
+<button onclick="exportarCierreCaja()">🧾 Exportar cierre del día</button>
+</section>
+
+</section>
+
+<!-- PANTALLA PREMIOS -->
+
+<section id="pantallaPremios" class="pantallaHistorial oculto">
+
+<div class="headerHistorial">
+<button onclick="cerrarPantallaPremios()">⬅ Volver</button>
+<h2>Premios pendientes</h2>
+</div>
+
+<div id="listaPremios"></div>
+
+</section>
+
+
+<!-- HISTORIAL -->
+
 <section id="pantallaHistorial" class="pantallaHistorial oculto">
 
-  <div class="headerHistorial">
-    <button onclick="cerrarHistorial()">⬅ Volver</button>
-    <h2>Resumen semanal</h2>
-  </div>
+<div class="headerHistorial">
+<button onclick="cerrarHistorial()">⬅ Volver</button>
+<h2>Resumen semanal</h2>
+</div>
 
-  <div class="navSemana">
-    <button onclick="cambiarSemana(-7)">⬅ Semana anterior</button>
-    <button onclick="cambiarSemana(7)">Semana siguiente ➡</button>
-  </div>
+<div class="navSemana">
+<button onclick="cambiarSemana(-7)">⬅ Semana anterior</button>
+<button onclick="cambiarSemana(7)">Semana siguiente ➡</button>
+</div>
 
-  <div id="historialSemanal"></div>
+<div id="historialSemanal"></div>
 
 </section>
 
-<!-- 🔵 PANTALLA DETALLE DEL DIA -->
+
 <section id="pantallaDetalleDia" class="pantallaHistorial oculto">
 
-  <div class="headerHistorial">
-    <button onclick="cerrarDetalle()">⬅ Volver</button>
-    <h2>Detalle del día</h2>
-  </div>
+<div class="headerHistorial">
+<button onclick="cerrarDetalle()">⬅ Volver</button>
+<h2>Detalle del día</h2>
+</div>
 
-  <div id="detalleDiaContenido"></div>
+<div id="detalleDiaContenido"></div>
 
 </section>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="script.js"></script>
 
 <script>
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("Service Worker registrado"))
-    .catch(err => console.log("Error SW:", err));
+navigator.serviceWorker.register("service-worker.js")
 }
 </script>
 

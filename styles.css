@@ -182,3 +182,13 @@ th, td {
   font-size: 20px;
   cursor: pointer;
 }
+
+.btnPremio{
+margin-top:10px;
+background:#ffc107;
+border:none;
+padding:12px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}

@@ -36,7 +36,7 @@ function generarSemana() {
   const lunes = new Date(hoy);
   lunes.setDate(hoy.getDate() - diff);
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = -7; i <= 7; i++) {
     const d = new Date(lunes);
     d.setDate(lunes.getDate() + i);
 
@@ -244,7 +244,8 @@ function actualizarResumen() {
     🎰 Quiniela: $${qRec.toFixed(2)} | Ganancia: $${qGan.toFixed(2)}<br>
     🧾 Lotipago: $${lRec.toFixed(2)} | Ganancia: $${lGan.toFixed(2)}<br><br>
     📒 Fiados: $${totalFiado.toFixed(2)}<br><br>
-    💵 <b>TOTAL DEL DÍA: $${totalMovimiento.toFixed(2)}</b><br>
+    🏆 Premios pendientes: $${totalPremiosPendientes().toFixed(2)}<br><br>
+    💵TOTAL DEL DÍA: $${(totalMovimiento - premiosDelDia()).toFixed(2)}
     💰 <b>GANANCIA DEL DÍA: $${totalGanancia.toFixed(2)}</b>
   `;
 }
@@ -324,7 +325,7 @@ function generarHistorialSemanal() {
   const lunes = new Date(hoy);
   lunes.setDate(hoy.getDate() - diff);
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = -7; i <= 7; i++) {
     const d = new Date(lunes);
     d.setDate(lunes.getDate() + i);
 
@@ -425,6 +426,139 @@ function saldar(id) {
 
   localStorage.setItem("registros", JSON.stringify(registros));
   render();
+}
+
+// =========================
+// PREMIOS
+// =========================
+
+let premios = JSON.parse(localStorage.getItem("premios") || "[]");
+
+function registrarPremio(){
+
+const monto = parseFloat(prompt("Monto del premio"));
+
+if(!monto || monto<=0) return;
+
+premios.push({
+id: Date.now(),
+fecha: fechaSeleccionada,
+monto,
+pagado:false
+});
+
+localStorage.setItem("premios", JSON.stringify(premios));
+
+render();
+}
+
+function abrirPantallaPremios(){
+
+document.getElementById("pantallaPrincipal").style.display="none";
+document.getElementById("pantallaPremios").style.display="block";
+
+renderPremios();
+}
+
+function cerrarPantallaPremios(){
+
+document.getElementById("pantallaPremios").style.display="none";
+document.getElementById("pantallaPrincipal").style.display="block";
+
+}
+
+function renderPremios(){
+
+const cont=document.getElementById("listaPremios");
+
+cont.innerHTML="";
+
+premios.forEach(p=>{
+
+if(p.pagado) return;
+
+const div=document.createElement("div");
+
+div.className="itemHistorial";
+
+div.innerHTML=`
+
+<b>${p.fecha}</b><br>
+
+Premio: $${p.monto.toFixed(2)}
+
+<br><br>
+
+<button onclick="pagarPremio(${p.id})">
+
+💰 Pagar premio
+
+</button>
+
+`;
+
+cont.appendChild(div);
+
+});
+
+}
+
+function pagarPremio(id){
+
+if(!confirm("¿Pagar este premio?")) return;
+
+const p=premios.find(x=>x.id==id);
+
+if(!p) return;
+
+p.pagado=true;
+
+localStorage.setItem("premios", JSON.stringify(premios));
+
+renderPremios();
+
+render();
+
+}
+
+// =========================
+// CALCULO TOTAL PREMIOS
+// =========================
+
+function totalPremiosPendientes(){
+
+let total=0;
+
+premios.forEach(p=>{
+
+if(!p.pagado){
+
+total+=p.monto;
+
+}
+
+});
+
+return total;
+
+}
+
+function premiosDelDia(){
+
+let total=0;
+
+premios.forEach(p=>{
+
+if(!p.pagado && p.fecha===fechaSeleccionada){
+
+total+=p.monto;
+
+}
+
+});
+
+return total;
+
 }
 
 // =========================
