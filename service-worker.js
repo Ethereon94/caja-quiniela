@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gestor-recetas-v1';
+﻿const CACHE_NAME = 'gestor-recetas-v2';
 
 const URLS_TO_CACHE = [
   '/',
